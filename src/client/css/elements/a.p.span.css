@@ -1,0 +1,9 @@
+a,
+p,
+span,
+input[type="text"],
+input[type="password"],
+select {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+}

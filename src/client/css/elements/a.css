@@ -1,0 +1,20 @@
+a {
+  ---color: var(--primary-color);
+
+  color: var(---color);
+
+  padding-left: var(--padding-x);
+  padding-right: var(--padding-x);
+  padding-bottom: var(--padding-y);
+
+  &.secondary {
+    ---color: var(--secondary-color);
+  }
+
+  &:hover {
+    letter-spacing: calc(var(--letter-spacing) * 2 + 1px);
+
+    color: var(--color-on-hover);
+    background: var(---color);
+  }
+}

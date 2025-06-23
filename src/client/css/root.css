@@ -1,0 +1,22 @@
+:root {
+  --font-family: "Jura", "Consolas", monospace;
+
+  --font-size: calc(12px + 0.5vh + 0.5vw);
+
+  --background-color: #000;
+  --color: #fff;
+  --color-on-hover: #000;
+
+  --transition-time: 0.3s;
+  --transition: all var(--transition-time) ease-in-out;
+
+  --letter-spacing: 1px;
+
+  --primary-color: #0f6;
+  --secondary-color: #999;
+
+  --padding-x: calc(2px + 1vw);
+  --padding-y: calc(1px + 0.5vh);
+
+  --input-width: calc(32px + 24vw);
+}

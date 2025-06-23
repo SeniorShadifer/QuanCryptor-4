@@ -1,0 +1,32 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family);
+}
+
+h1 {
+  font-size: calc(16px + 1.6vh + 1.6vw);
+}
+
+h2 {
+  font-size: calc(12px + 1.2vh + 1.2vw);
+}
+
+h3 {
+  font-size: calc(9px + 0.9vh + 0.9vw);
+}
+
+h4 {
+  font-size: calc(8px + 0.8vh + 0.8vw);
+}
+
+h5 {
+  font-size: calc(7px + 0.7vh + 0.7vw);
+}
+
+h6 {
+  font-size: calc(6px + 0.6vh + 0.6vw);
+}
