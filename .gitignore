@@ -1,0 +1,14 @@
+src/*/__pycache__/
+__pycache__/
+
+.vscode/
+.idea/
+
+build/
+venv/
+
+src/*.egg-info/
+
+
+*.pyc
+.env
