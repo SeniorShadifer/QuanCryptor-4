@@ -9,6 +9,10 @@ venv/
 
 src/*.egg-info/
 
+gitignore/
+
+tests/common/test_configuration.json
+tests/server/test_configuration.json
 
 *.pyc
 .env
