@@ -1,9 +1,19 @@
 from termcolor import colored
 
 import server.const
-import server.flask_server
+import server.route
+import server.var
+from common import os_utils
 
 
 def main():
-    print(colored(f"{server.const.APP_FULLNAME}", color="green"))
-    server.flask_server.server.run("localhost", 8252)
+    server.var.configuration = os_utils.load_configuration(
+        f"{server.path.absolute_application_path}/configuration.json",
+        default={"ip": "0.0.0.0", "port": 8254, "debug": False},
+    )
+
+    server.route.server.run(
+        host=server.var.configuration["ip"],
+        port=server.var.configuration["port"],
+        debug=server.var.configuration["debug"],
+    )

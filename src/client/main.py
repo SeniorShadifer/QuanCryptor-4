@@ -8,8 +8,6 @@ from common import crypto_utils
 
 
 def main():
-    print(colored(f"{client.const.APP_FULLNAME}", color="green"))
-
     api = client.Api.Api()
     window = webview.create_window(
         title=f"{client.const.APP_FULLNAME} WebGUI",

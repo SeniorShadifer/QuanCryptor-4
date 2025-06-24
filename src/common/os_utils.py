@@ -1,10 +1,7 @@
+import json
 import os
 
 from platformdirs import user_data_dir, user_cache_dir, user_config_dir
-
-
-def absolute_application_path():
-    return os.path.dirname(os.path.abspath(__file__))
 
 
 def create_and_get_platform_dirs(app_name: str, app_author: str, app_version: str):
@@ -36,3 +33,25 @@ def create_and_get_platform_dirs(app_name: str, app_author: str, app_version: st
         os.makedirs(config_dir)
 
     return data_dir, cache_dir, config_dir
+
+
+def load_configuration(path: str, default={}):
+    ret = {}
+    if os.path.exists(path):
+        with open(path, "r") as fin:
+            ret = json.loads(fin.read())
+
+        for key, value in default.items():
+            print(f"{key} = {value}")  # temp
+            if key not in ret:
+                print(f"{key} not in {ret}")  # temp
+                ret[key] = value
+
+        with open(path, "w") as fout:
+            fout.write(json.dumps(ret))
+    else:
+        with open(path, "w") as fout:
+            fout.write(json.dumps(default))
+            ret = default
+
+    return ret
