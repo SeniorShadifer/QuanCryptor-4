@@ -4,7 +4,7 @@ from termcolor import colored
 import client.Api
 import client.const
 import client.path
-from common import utils
+from common import crypto_utils
 
 
 def main():

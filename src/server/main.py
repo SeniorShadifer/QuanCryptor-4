@@ -1,5 +1,9 @@
-from termcolor import cprint
+from termcolor import colored
+
+import server.const
+import server.flask_server
 
 
 def main():
-    cprint("Hello from server!!!", color="green")
+    print(colored(f"{server.const.APP_FULLNAME}", color="green"))
+    server.flask_server.server.run("localhost", 8252)

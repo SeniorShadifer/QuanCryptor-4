@@ -4,9 +4,10 @@ from platformdirs import user_data_dir, user_config_dir, user_cache_dir
 
 import client.const
 import client.path
+from common import os_utils
 
 
-client.path.absolute_application_path = os.path.dirname(os.path.abspath(__file__))
+client.path.absolute_application_path = os_utils.absolute_application_path()
 
 
 client.path.user_data_dir = user_data_dir(
