@@ -42,9 +42,7 @@ def load_configuration(path: str, default={}):
             ret = json.loads(fin.read())
 
         for key, value in default.items():
-            print(f"{key} = {value}")  # temp
             if key not in ret:
-                print(f"{key} not in {ret}")  # temp
                 ret[key] = value
 
         with open(path, "w") as fout:
@@ -53,5 +51,18 @@ def load_configuration(path: str, default={}):
         with open(path, "w") as fout:
             fout.write(json.dumps(default))
             ret = default
+
+    return ret
+
+
+def load_or_generate_bytes(path: str, len: int = 16):
+    ret: bytes
+    if os.path.exists(path):
+        with open(path, "r") as fin:
+            ret = fin.read().encode()
+    else:
+        ret = os.urandom(len).hex().encode()
+        with open(path, "w") as fout:
+            fout.write(ret.decode())
 
     return ret

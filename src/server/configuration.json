@@ -1,0 +1,1 @@
+{"ip": "0.0.0.0", "port": 8254, "debug": false, "use_reloader": false, "iterations": 200000, "cert_path": "cert.pem", "key_path": "key.pem", "common_name": "localhost", "domains": ["localhost"], "ips": ["127.0.0.1"]}
