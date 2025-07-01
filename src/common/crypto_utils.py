@@ -10,7 +10,10 @@ def hash(data: bytes) -> bytes:
     return digest.finalize()
 
 
-def hash_with_salt(password: bytes, salt: bytes, iterations: int = 200_000):
+def hash_with_salt(password: bytes | str, salt: bytes, iterations: int = 200_000):
+    if isinstance(password, str):
+        password = password.encode("utf-8")
+
     return PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,

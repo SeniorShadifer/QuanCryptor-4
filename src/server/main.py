@@ -2,17 +2,13 @@ import os
 
 from termcolor import colored
 
-import server.var
-import server.const
-import server.crypto
-import server.route
-from common import os_utils
-from common import crypto_utils
+import server.crypto, server.route, server.var, server.db
+from common import os_utils, crypto_utils
 
 
 def main():
     server.var.configuration = os_utils.load_configuration(
-        f"{server.path.absolute_application_path}/configuration.json",
+        f"./configuration.json",
         default=server.var.default_configuration,
     )
 
@@ -26,12 +22,15 @@ def main():
     else:
         with open(server.var.configuration["cert_path"], "r") as fin:
             cert = fin.read()
+
     server.var.cert = cert
     print(
         colored(
             f"Certificate hash: {crypto_utils.hash(cert.encode()).hex()}", color="cyan"
         )
     )
+
+    server.db.prepare_database()
 
     server.route.flaskapp.run(
         host=server.var.configuration["ip"],

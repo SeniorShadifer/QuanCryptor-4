@@ -10,4 +10,7 @@
   opacity: 0;
 
   pointer-events: none;
+
+  transition: transform var(--transition-time) ease-in-out;
+  transition: width 0s ease-in-out, height 0s ease-in-out;
 }

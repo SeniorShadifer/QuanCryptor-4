@@ -11,17 +11,124 @@
       href="https://fonts.googleapis.com/css2?family=Jura&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
 
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <h1>h1</h1>
-    <h2>h2</h2>
-    <h3>h3</h3>
-    <h4>h4</h4>
-    <h5>h5</h5>
-    <h6>h6</h6>
+    <h1>Registration/Login</h1>
+    <span>
+      Select server for registration:
+      <select name="server_select" id="server_select">
+        <option value="add_new_server">Add new server</option>
+      </select>
+    </span>
+    <div id="server_data_div">
+      <p>
+        <i class="fa-solid fa-link"></i>
+        <input
+          id="server_address"
+          type="text"
+          class="wide"
+          placeholder=">>> Server address (without protocol)"
+        />
+      </p>
+      <p>
+        <i class="fa-solid fa-shield-halved"></i>
+        <input
+          id="server_certificate_hash"
+          type="text"
+          class="wide"
+          placeholder=">>> Server certificate hash (SHA-256)"
+        />
+      </p>
+      <p>
+        <i class="fa-solid fa-key"></i>
+        <input
+          id="server_password"
+          type="password"
+          class="wide"
+          placeholder=">>> Server password (not your account password)"
+        />
+      </p>
+      <p>
+        <button id="connect">Connect</button>
+        <span id="result_0"></span>
+      </p>
+    </div>
 
+    <p></p>
     <a href="./index.html">Reload</a>
   </body>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        const server_select = document.getElementById("server_select");
+        const server_data_div = document.getElementById("server_data_div");
+
+        const server_address_input = document.getElementById("server_address");
+        const server_certificate_hash_input = document.getElementById(
+          "server_certificate_hash"
+        );
+        const server_password_input =
+          document.getElementById("server_password");
+
+        const connect_button = document.getElementById("connect");
+        const result_0_span = document.getElementById("result_0");
+
+        let server_list = [];
+
+        server_select.addEventListener("input", () => {
+          if (server_select.value == "add_new_server") {
+            server_data_div.classList.remove("hided");
+          } else {
+            server_data_div.classList.add("hided");
+          }
+        });
+
+        connect_button.addEventListener("click", async () => {
+          const address = server_address_input.value;
+          const certificate_hash = server_certificate_hash_input.value;
+          const password = server_password_input.value;
+
+          const result = await pywebview.api.add_server(
+            address,
+            certificate_hash,
+            password
+          );
+
+          if (result === true) {
+            let server = document.createElement("option");
+            server.innerHTML = address;
+            server.value = address;
+            server_select.appendChild(server);
+            server_select.value = address;
+          } else {
+          }
+        });
+
+        setTimeout(async () => {
+          try {
+            server_list = await pywebview.api.get_server_list();
+
+            for (let index = 0; index < server_list.length; index++) {
+              const element = server_list[index];
+
+              let server = document.createElement("option");
+              server.innerHTML = element[0];
+              server.value = element[0];
+              server_select.appendChild(server);
+            }
+          } catch (error) {
+            alert(`Critical JavaScript error: ${error}`);
+          }
+        }, 1000);
+      } catch (error) {
+        alert(`Critical JavaScript error: ${error}`);
+      }
+    });
+  </script>
 </html>

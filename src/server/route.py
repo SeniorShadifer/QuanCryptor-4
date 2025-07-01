@@ -1,10 +1,9 @@
 from flask import Flask
 
-import server.crypto
-import server.var
+import server.const, server.crypto, server.var
 
 
-flaskapp = Flask(__name__)
+flaskapp = Flask(server.const.APP_NAME)
 
 
 @flaskapp.route("/cert")

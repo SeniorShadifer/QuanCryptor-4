@@ -35,7 +35,7 @@ def create_and_get_platform_dirs(app_name: str, app_author: str, app_version: st
     return data_dir, cache_dir, config_dir
 
 
-def load_configuration(path: str, default={}):
+def load_configuration(path: str, default={}, indent: int = 4):
     ret = {}
     if os.path.exists(path):
         with open(path, "r") as fin:
@@ -46,10 +46,10 @@ def load_configuration(path: str, default={}):
                 ret[key] = value
 
         with open(path, "w") as fout:
-            fout.write(json.dumps(ret))
+            fout.write(json.dumps(ret, indent=indent))
     else:
         with open(path, "w") as fout:
-            fout.write(json.dumps(default))
+            fout.write(json.dumps(default, indent=indent))
             ret = default
 
     return ret

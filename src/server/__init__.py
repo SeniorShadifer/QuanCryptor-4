@@ -1,14 +1,12 @@
-import os
-
 from termcolor import colored
 
-import server.var
-import server.path
 import server.const
-from common import os_utils
 
 
 print(colored(f"{server.const.APP_FULLNAME}", color="green"))
-
-
-server.path.absolute_application_path = os.path.dirname(os.path.abspath(__file__))
+print(
+    colored(
+        f"Attention: this server is protected by multi-symmetric encryption, but this is not protected from hacker attacks. Use this in private netorks (as Wi-Fi local network or VPN) with small count of clients.",
+        color="yellow",
+    )
+)

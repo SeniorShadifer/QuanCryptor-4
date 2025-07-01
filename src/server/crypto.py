@@ -13,10 +13,8 @@ from cryptography.fernet import Fernet
 from cryptography import x509
 
 
-import server.path
 import server.var
-from common import crypto_utils
-from common import os_utils
+from common import os_utils, crypto_utils
 
 password: bytes = b""
 salt: bytes = b""
@@ -30,13 +28,9 @@ fernet: Fernet
 def load_key():
     global password, salt, key, checksum, fernet
 
-    password = os_utils.load_or_generate_bytes(
-        f"{server.path.absolute_application_path}/password.txt"
-    )
+    password = os_utils.load_or_generate_bytes(f"./password.txt")
 
-    salt = os_utils.load_or_generate_bytes(
-        f"{server.path.absolute_application_path}/salt.txt"
-    )
+    salt = os_utils.load_or_generate_bytes(f"./salt.txt")
 
     key = crypto_utils.hash_with_salt(
         password, salt, iterations=server.var.configuration["iterations"]
