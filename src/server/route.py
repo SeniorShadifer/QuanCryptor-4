@@ -1,13 +1,28 @@
-from flask import Flask
+import sqlite3
+from flask import Flask, request, g
 
-import server.const, server.crypto, server.var
+import server.const, server.crypto, server.var, server.db
 
 
 flaskapp = Flask(server.const.APP_NAME)
 
 
+def get_db():
+    if "db" not in g:
+        g.db = sqlite3.connect(server.db.CONNECT_STR)
+
+    return g.db
+
+
+@flaskapp.teardown_appcontext
+def close_db(e):
+    db = g.pop("db", None)
+    if db is not None:
+        db.close()
+
+
 @flaskapp.route("/cert")
-def hello_world():
+def receive_cert():
     return server.var.cert
 
 
@@ -24,3 +39,13 @@ def receive_iterations():
 @flaskapp.route("/checksum")
 def receive_checksum():
     return server.crypto.checksum
+
+
+""" @flaskapp.route("/register", methods=["POST"])
+def register():
+    data = request """
+
+
+@flaskapp.route("/test")
+def test():
+    return f"{get_db().execute("SELECT * FROM messages").fetchall()}"
