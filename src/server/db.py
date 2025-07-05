@@ -1,6 +1,8 @@
 import sqlite3
 from sqlite3 import Connection, Cursor
 
+import server.crypto, server.var
+from common import crypto_utils
 
 CONNECT_STR = "database.db"
 
@@ -19,11 +21,19 @@ def prepare_database():
         """CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY NOT NULL,
             nickname TEXT(50) NOT NULL,
-            server TEXT(200),
+            color TEXT(7) DEFAULT '#FFF',
 
-            hash VARCHAR(64),
-            salt VARCHAR(128)
+            server_url TEXT(200),
+            server_hash VARCHAR(64),
+
+            password_hash VARCHAR(64),
+            password_salt VARCHAR(128),
+            iterations INTEGER
         )"""
+    )
+
+    cursor.execute(
+        """INSERT OR IGNORE INTO users (id, nickname, color) VALUES (0, 'SERVER', '#F0F')"""
     )
 
     cursor.execute(
@@ -41,14 +51,43 @@ def prepare_database():
     )
 
     cursor.execute(
+        """INSERT OR IGNORE INTO chats 
+        (id, chat_name, description, salt, checksum_salt, checksum_hash, iterations)
+        VALUES
+        (0, 
+        'Shared server chat', 
+        'Chat available to all server users. The key is identical to the server key.',
+        ?, ?, ?, ?)
+        """,
+        (
+            server.crypto.salt,
+            server.crypto.checksum_salt,
+            server.crypto.checksum_hash,
+            server.crypto.iterations,
+        ),
+    )
+
+    cursor.execute(
         """CREATE TABLE IF NOT EXISTS messages (
                    id INTEGER PRIMARY KEY NOT NULL,
                    chat_id INTEGER NOT NULL,
                    sender_id INTEGER NOT NULL,
 
-                   message TEXT(10000),
+                   message VARCHAR(50000),
                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )"""
+    )
+
+    cursor.execute(
+        """INSERT OR IGNORE INTO messages (id, chat_id, sender_id, message) 
+        VALUES
+        (0, 0, 0, ?)
+        """,
+        (
+            server.crypto.fernet.encrypt(
+                server.var.configuration["shared_chat_hello_message"].encode()
+            ),
+        ),
     )
 
     connection.commit()

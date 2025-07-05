@@ -16,39 +16,44 @@ from cryptography import x509
 import server.var
 from common import os_utils, crypto_utils
 
-password: bytes = b""
-salt: bytes = b""
-key: bytes = b""
+iterations: int
 
+password: bytes
+salt: bytes
+key: bytes
+
+checksum_salt: bytes
+checksum_hash: bytes
 checksum: str = "{}"
 
 fernet: Fernet
 
 
 def load_key():
-    global password, salt, key, checksum, fernet
+    global password, salt, key, checksum, checksum_salt, checksum_hash, fernet, iterations
+
+    iterations = int(server.var.configuration["iterations"])
 
     password = os_utils.load_or_generate_bytes(f"./password.txt")
 
     salt = os_utils.load_or_generate_bytes(f"./salt.txt")
 
-    key = crypto_utils.hash_with_salt(
-        password, salt, iterations=server.var.configuration["iterations"]
-    )
+    key = crypto_utils.hash_with_salt(password, salt, iterations)
 
     fernet = Fernet(base64.b64encode(key), backend=default_backend())
 
     checksum_salt = os.urandom(16).hex().encode()
+    checksum_hash = crypto_utils.hash_with_salt(
+            password,
+            checksum_salt,
+            iterations,
+        )
+    
+
     checksum = json.dumps(
         {
             "salt": base64.b64encode(checksum_salt).decode(),
-            "hash": base64.b64encode(
-                crypto_utils.hash_with_salt(
-                    password,
-                    checksum_salt,
-                    iterations=server.var.configuration["iterations"],
-                )
-            ).decode(),
+            "hash": base64.b64encode(checksum_hash).decode(),
         }
     )
 

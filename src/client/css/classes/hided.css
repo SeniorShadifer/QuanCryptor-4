@@ -1,16 +1,19 @@
 .hided {
-  width: 0px;
-  height: 0px;
+  &,
+  & * {
+    width: 0px;
+    height: 0px;
 
-  margin: 0px;
-  padding: 0px;
+    margin: 0px;
+    padding: 0px;
 
-  transform: scale(0);
+    transform: scale(0);
 
-  opacity: 0;
+    opacity: 0;
 
-  pointer-events: none;
+    pointer-events: none;
 
-  transition: transform var(--transition-time) ease-in-out;
-  transition: width 0s ease-in-out, height 0s ease-in-out;
+    transition: transform var(--transition-time) ease-in-out;
+    transition: width 0s ease-in-out, height 0s ease-in-out;
+  }
 }

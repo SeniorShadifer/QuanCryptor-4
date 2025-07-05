@@ -10,6 +10,8 @@ default_configuration = {
     "common_name": "localhost",
     "domains": ["localhost"],
     "ips": ["127.0.0.1"],
+    "shared_chat_hello_message": "Hello, world!",
 }
+
 
 cert: bytes

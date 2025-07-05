@@ -67,7 +67,7 @@ class Api:
                 )
             ).decode()
 
-            if not hash == checksum["hash"]:
+            if hash != checksum["hash"]:
                 raise Exception(f"Incorrect password: {hash} != {checksum["hash"]}")
 
             output("Generating key...")
@@ -93,3 +93,7 @@ class Api:
             traceback.print_exc()
             output(f"Failed to adding server {address} to database: {e}", color="red")
             return False
+
+    def register(self, address: str, login: str, password: bytes):
+        print(f"Registering on {address}...")
+        # TODO: Create registration function

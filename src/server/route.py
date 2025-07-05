@@ -1,7 +1,10 @@
 import sqlite3
+import json
+import os
 from flask import Flask, request, g
 
 import server.const, server.crypto, server.var, server.db
+from common import crypto_utils
 
 
 flaskapp = Flask(server.const.APP_NAME)
@@ -33,7 +36,7 @@ def receive_salt():
 
 @flaskapp.route("/iterations")
 def receive_iterations():
-    return str(server.var.configuration["iterations"])
+    return str(server.crypto.iterations)
 
 
 @flaskapp.route("/checksum")
@@ -41,9 +44,43 @@ def receive_checksum():
     return server.crypto.checksum
 
 
-""" @flaskapp.route("/register", methods=["POST"])
+@flaskapp.route("/register", methods=["POST"])
 def register():
-    data = request """
+    data = json.loads(server.crypto.fernet.decrypt(request.get_data()))
+    print(data)
+
+    db = get_db()
+
+    if (
+        db.cursor()
+        .execute(
+            "SELECT EXISTS(SELECT 1 FROM users WHERE nickname = ?)", (data["nickname"],)
+        )
+        .fetchone()[0]
+        == 1
+    ):
+        raise Exception("Account already exists")
+
+    password_salt = os.urandom(16)
+    password_hash = crypto_utils.hash_with_salt(
+        data["password"], password_salt, server.crypto.iterations
+    )
+
+    db.cursor().execute(
+        """
+        INSERT INTO users (nickname, password_hash, password_salt, iterations) VALUES (?, ?, ?, ?)
+        """,
+        (
+            data["nickname"],
+            password_hash,
+            password_salt,
+            server.crypto.iterations,
+        ),
+    )
+
+    db.commit()
+
+    return "true"
 
 
 @flaskapp.route("/test")
